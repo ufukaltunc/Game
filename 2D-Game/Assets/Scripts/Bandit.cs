@@ -12,6 +12,8 @@ public class Bandit : MonoBehaviour
     private Sensor_Bandit m_groundSensor;
     private bool m_grounded = false;
     private bool m_combatIdle = false;
+    //private GameObject[] players;
+    private static Bandit instance;
     public static bool m_isDead = false;
 
     public HealthBar healthBar;
@@ -25,8 +27,17 @@ public class Bandit : MonoBehaviour
     float nextAttackTime = 0f;
 
     // Use this for initialization
-    void Start()
+    void Awake()
     {
+        if (instance != null)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            instance = this;
+        }
+        DontDestroyOnLoad(gameObject);
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
         m_animator = GetComponent<Animator>();
@@ -37,6 +48,7 @@ public class Bandit : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         //Check if character just landed on the ground
         if (!m_grounded && m_groundSensor.State())
         {
@@ -165,5 +177,21 @@ public class Bandit : MonoBehaviour
             return;
         }
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+    }
+
+    private void OnLevelWasLoaded(int level)
+    {
+        FindStartPos();
+
+        /*players = GameObject.FindGameObjectsWithTag("Player");
+
+        if (players.Length > 1)
+        {
+            Destroy(players[1]);
+        }*/
+    }
+    void FindStartPos()
+    {
+        transform.position = GameObject.FindWithTag("StartPos").transform.position;
     }
 }
