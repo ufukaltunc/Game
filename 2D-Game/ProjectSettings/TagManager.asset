@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - StartPos
+  - Backpack
+  - Key
   layers:
   - Default
   - TransparentFX
@@ -13,7 +15,7 @@ TagManager:
   - Water
   - UI
   - Player
-  - ForeGround
+  - Ground
   - 
   - 
   - 
@@ -42,12 +44,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: 
-    uniqueID: 2425651459
-    locked: 0
-  - name: Layer 2
+  - name: BackGround
     uniqueID: 4250941897
     locked: 0
-  - name: ForeGround
+  - name: Platform
     uniqueID: 4189426099
+    locked: 0
+  - name: Player
+    uniqueID: 2425651459
     locked: 0

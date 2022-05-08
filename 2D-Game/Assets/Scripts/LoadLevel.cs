@@ -7,7 +7,7 @@ public class LoadLevel : MonoBehaviour
 {
     public int iLeveltoLoad;
     public string sLeveltoLoad;
-
+    public Key key;
     public bool useInttoLoadLevel = false;
     void Start()
     {
@@ -20,11 +20,10 @@ public class LoadLevel : MonoBehaviour
 
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerStay2D(Collider2D other)
     {
-        GameObject gameObject = other.gameObject;
 
-        if (gameObject.tag == "Player")
+        if (other.gameObject.tag == "Player" && Input.GetKey("o") && key.havekey == true)
         {
             LoadScene();
         }

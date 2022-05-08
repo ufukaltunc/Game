@@ -3,33 +3,47 @@ using System.Collections;
 
 public class Bandit : MonoBehaviour
 {
-
-    [SerializeField] float m_speed = 4.0f;
-    [SerializeField] float m_jumpForce = 7.5f;
-
-    private Animator m_animator;
-    private Rigidbody2D m_body2d;
-    private Sensor_Bandit m_groundSensor;
-    private bool m_grounded = false;
-    private bool m_combatIdle = false;
-    //private GameObject[] players;
+    #region Private Variables
+    private Animator anim;
+    private Rigidbody2D rb;
     private static Bandit instance;
-    public static bool m_isDead = false;
+    private float movementInputDirection;
+    private bool isWalking;
+    private bool isFacingRight = true;
+    private bool isGrounded;
+    private bool canJump;
+    private int amountOfJumpsLeft;
+    //private Sensor_Bandit m_groundSensor;
+    //private bool m_combatIdle = false;
+    #endregion
 
+
+    #region Public Variables
+    [SerializeField] float movementSpeed = 4.0f;
+    [SerializeField] float jumpForce = 7.5f;
+    public ParticleSystem dust;
     public HealthBar healthBar;
     public Transform attackPoint;
-    public float attackRange = 0.5f;
     public LayerMask enemyLayers;
+    public LayerMask whatIsGround;
+    public Transform groundCheck;
+    public float groundCheckRadius;
+    public int amountOfJumps = 1;
+    public float variableJumpHeightMultiplier = 0.5f;
+    public static bool m_isDead = false;
+    public float attackRange = 0.5f;
     public int attackDamage = 40;
     public int maxHealth = 100;
     int currentHealth;
     public float attackRate = 2f;
     float nextAttackTime = 0f;
+    #endregion
+
 
     // Use this for initialization
     void Awake()
     {
-        if (instance != null)
+        /*if (instance != null)
         {
             Destroy(gameObject);
         }
@@ -37,32 +51,41 @@ public class Bandit : MonoBehaviour
         {
             instance = this;
         }
-        DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(gameObject);*/
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
-        m_animator = GetComponent<Animator>();
-        m_body2d = GetComponent<Rigidbody2D>();
-        m_groundSensor = transform.Find("GroundSensor").GetComponent<Sensor_Bandit>();
+        anim = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody2D>();
+        amountOfJumpsLeft = amountOfJumps;
+        //m_groundSensor = transform.Find("GroundSensor").GetComponent<Sensor_Bandit>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        CheckInput();
+        CheckMovementDirection();
+        UpdateAnimations();
+        CheckIfCanJump();
 
+        /*
         //Check if character just landed on the ground
         if (!m_grounded && m_groundSensor.State())
         {
             m_grounded = true;
-            m_animator.SetBool("Grounded", m_grounded);
+            anim.SetBool("Grounded", m_grounded);
         }
 
         //Check if character just started falling
         if (m_grounded && !m_groundSensor.State())
         {
             m_grounded = false;
-            m_animator.SetBool("Grounded", m_grounded);
+            anim.SetBool("Grounded", m_grounded);
         }
 
+        
+        
+        
         // -- Handle input and movement --
         float inputX = Input.GetAxis("Horizontal");
 
@@ -73,22 +96,22 @@ public class Bandit : MonoBehaviour
             transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
 
         // Move
-        m_body2d.velocity = new Vector2(inputX * m_speed, m_body2d.velocity.y);
+        rb.velocity = new Vector2(inputX * movementSpeed, rb.velocity.y);
 
-        //Set AirSpeed in animator
-        m_animator.SetFloat("AirSpeed", m_body2d.velocity.y);
+
+        
 
         // -- Handle Animations --
         //Death
         if (Input.GetKeyDown("e"))
         {
-            m_animator.SetTrigger("Recover");
+            anim.SetTrigger("Recover");
             currentHealth = maxHealth;
         }
 
         //Hurt
         else if (Input.GetKeyDown("q"))
-            m_animator.SetTrigger("Hurt");
+            anim.SetTrigger("Hurt");
 
         //Attack
         else if (Input.GetMouseButtonDown(0))
@@ -104,31 +127,116 @@ public class Bandit : MonoBehaviour
         //Jump
         else if (Input.GetKeyDown("space") && m_grounded)
         {
-            m_animator.SetTrigger("Jump");
+            CreatDust();
+            anim.SetTrigger("Jump");
             m_grounded = false;
-            m_animator.SetBool("Grounded", m_grounded);
-            m_body2d.velocity = new Vector2(m_body2d.velocity.x, m_jumpForce);
+            anim.SetBool("Grounded", m_grounded);
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
             m_groundSensor.Disable(0.2f);
         }
 
         //Run
         else if (Mathf.Abs(inputX) > Mathf.Epsilon)
-            m_animator.SetInteger("AnimState", 2);
+            anim.SetInteger("AnimState", 2);
 
         //Combat Idle
         else if (m_combatIdle)
-            m_animator.SetInteger("AnimState", 1);
+            anim.SetInteger("AnimState", 1);
 
         //Idle
         else
-            m_animator.SetInteger("AnimState", 0);
+            anim.SetInteger("AnimState", 0);*/
+    }
+    private void FixedUpdate()
+    {
+        ApplyMovement();
+        CheckSurrondings();
+    }
+
+    private void CheckSurrondings()
+    {
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, whatIsGround);
+    }
+    private void CheckIfCanJump()
+    {
+        if (isGrounded && rb.velocity.y <= 0)
+        {
+            amountOfJumpsLeft = amountOfJumps;
+        }
+        if (amountOfJumpsLeft <= 0)
+        {
+            canJump = false;
+        }
+        else
+        {
+            canJump = true;
+        }
+    }
+    private void CheckMovementDirection()
+    {
+        if (isFacingRight && movementInputDirection < 0)
+        {
+            Flip();
+        }
+        else if (!isFacingRight && movementInputDirection > 0)
+        {
+            Flip();
+        }
+
+        if (Mathf.Abs(movementInputDirection) > Mathf.Epsilon)
+        {
+            isWalking = true;
+        }
+        else
+        {
+            isWalking = false;
+        }
+    }
+    private void UpdateAnimations()
+    {
+        anim.SetBool("isWalking", isWalking);
+        anim.SetBool("isGrounded", isGrounded);
+        //Set AirSpeed in animator
+        anim.SetFloat("AirSpeed", rb.velocity.y);
+    }
+
+    private void CheckInput()
+    {
+        movementInputDirection = Input.GetAxis("Horizontal");
+
+        if (Input.GetButtonDown("Jump"))
+        {
+            Jump();
+        }
+        if (Input.GetButtonUp("Jump"))
+        {
+            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * variableJumpHeightMultiplier);
+        }
+    }
+    private void ApplyMovement()
+    {
+        rb.velocity = new Vector2(movementSpeed * movementInputDirection, rb.velocity.y);
+    }
+    private void Jump()
+    {
+        if (canJump)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            amountOfJumpsLeft--;
+        }
+
+    }
+    private void Flip()
+    {
+        isFacingRight = !isFacingRight;
+        transform.Rotate(0.0f, 180.0f, 0.0f);
     }
 
     void Attack()
     {
         if (Time.time >= nextAttackTime)
         {
-            m_animator.SetTrigger("Attack");
+            anim.SetTrigger("Attack");
             nextAttackTime = Time.time + 1f / attackRate;
             Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
 
@@ -136,47 +244,38 @@ public class Bandit : MonoBehaviour
             foreach (Collider2D enemy in hitEnemies)
             {
                 //Debug.Log("Hit:" + enemy.name);
-                enemy.GetComponent<Enemy>().TakeDamage(attackDamage);
+                enemy.GetComponent<Enemy_behaviour>().TakeDamage(attackDamage);
             }
         }
 
     }
+
     public void PlayerTakeDamage(int damage)
     {
         //Player get damage
         currentHealth -= damage;
 
         healthBar.SetHealth(currentHealth);
-        m_animator.SetTrigger("Hurt");
+        anim.SetTrigger("Hurt");
 
         if (currentHealth <= 0)
         {
             PlayerDie();
         }
     }
-
     void PlayerDie()
     {
         //Player die
         m_isDead = true;
-        m_animator.SetTrigger("Death");
+        anim.SetTrigger("Death");
 
-        /*m_body2d.bodyType = RigidbodyType2D.Kinematic;
+        /*rb.bodyType = RigidbodyType2D.Kinematic;
 
         GetComponent<Collider2D>().enabled = false;
 
         Destroy(gameObject, 2f);
 
         this.enabled = false;*/
-    }
-
-    void OnDrawGizmosSelected()
-    {
-        if (attackPoint == null)
-        {
-            return;
-        }
-        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
     }
 
     private void OnLevelWasLoaded(int level)
@@ -193,5 +292,22 @@ public class Bandit : MonoBehaviour
     void FindStartPos()
     {
         transform.position = GameObject.FindWithTag("StartPos").transform.position;
+    }
+    void CreatDust()
+    {
+        dust.Play();
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        if (attackPoint == null)
+        {
+            return;
+        }
+        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
     }
 }

@@ -16,6 +16,8 @@ public class Enemy_behaviour : MonoBehaviour
     public GameObject hotZone;
     public GameObject triggerArea;
     public GameObject hitBox;
+    public Rigidbody2D rb;
+    public int maxHealth = 100;
     #endregion
 
     #region  Private Variables
@@ -25,12 +27,14 @@ public class Enemy_behaviour : MonoBehaviour
     private bool attackMode;
     private bool cooling;
     private float intTimer;
+    private int currentHealth;
     #endregion
 
 
     void Awake()
     {
         SelectTarget();
+        currentHealth = maxHealth;
         intTimer = timer;
         anim = GetComponent<Animator>();
     }
@@ -141,5 +145,28 @@ public class Enemy_behaviour : MonoBehaviour
             rotation.y = 0;
         }
         transform.eulerAngles = rotation;
+    }
+    public void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+
+        anim.SetTrigger("Hurt");
+
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+    void Die()
+    {
+        anim.SetBool("Death", true);
+
+        rb.bodyType = RigidbodyType2D.Kinematic;
+
+        GetComponent<Collider2D>().enabled = false;
+
+        Destroy(gameObject, 2f);
+
+        this.enabled = false;
     }
 }
