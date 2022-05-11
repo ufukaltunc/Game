@@ -14,6 +14,9 @@ public class Bandit : MonoBehaviour
     private float jumpTimer;
     private float turnTimer;
     private float wallJumpTimer;
+    private float dashTimeLeft;
+    private float lastImageXpos;
+    private float lastDash = -100f;
     private bool isWalking;
     private bool isFacingRight = true;
     private bool isGrounded;
@@ -29,6 +32,7 @@ public class Bandit : MonoBehaviour
     private bool isTounchingLedge;
     private bool canClimbLedge = false;
     private bool ledgeDetected;
+    private bool isDashing = false;
     private int amountOfJumpsLeft;
     private int facingDirection = 1;
     private int lastWallJumpDirection;
@@ -40,8 +44,6 @@ public class Bandit : MonoBehaviour
     #region Public Variables
     public ParticleSystem dust;
     public HealthBar healthBar;
-    public Transform attackPoint;
-    public LayerMask enemyLayers;
     public LayerMask whatIsGround;
     public Transform groundCheck;
     public Transform wallCheck;
@@ -52,8 +54,6 @@ public class Bandit : MonoBehaviour
     public float jumpForce = 16f;
     public float groundCheckRadius;
     public float variableJumpHeightMultiplier = 0.5f;
-    public float attackRate = 2f;
-    public float attackRange = 0.5f;
     public float wallCheckDistance;
     public float wallSlideSpeed;
     //public float movementForceInAir;
@@ -67,9 +67,11 @@ public class Bandit : MonoBehaviour
     public float ledgeClimbXOffset2 = 0f;
     public float ledgeClimbYOffset1 = 0f;
     public float ledgeClimbYOffset2 = 0f;
+    public float dashTime = 0.2f;
+    public float dashSpeed = 50.0f;
+    public float distanceBetweenImages = 0.1f;
+    public float dashCoolDown = 2.5f;
     public int amountOfJumps = 1;
-    float nextAttackTime = 0f;
-    public int attackDamage = 40;
     public int maxHealth = 100;
     int currentHealth;
     public static bool m_isDead = false;
@@ -107,11 +109,16 @@ public class Bandit : MonoBehaviour
         CheckIfWallSliding();
         CheckJump();
         CheckLedgeClimb();
+        CheckDash();
     }
     private void FixedUpdate()
     {
         ApplyMovement();
         CheckSurrondings();
+    }
+    public int GetFacingDirection()
+    {
+        return facingDirection;
     }
     private void CheckIfWallSliding()
     {
@@ -198,7 +205,7 @@ public class Bandit : MonoBehaviour
             Flip();
         }
 
-        if (Mathf.Abs(movementInputDirection) > Mathf.Epsilon)
+        if (Mathf.Abs(rb.velocity.x) >= 0.01f)
         {
             isWalking = true;
         }
@@ -254,6 +261,46 @@ public class Bandit : MonoBehaviour
         {
             checkJumpMultiplier = false;
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * variableJumpHeightMultiplier);
+        }
+        if (Input.GetButtonDown("Dash"))
+        {
+            if (Time.time >= (lastDash + dashCoolDown))
+            {
+                AttemToDash();
+            }
+        }
+    }
+    private void AttemToDash()
+    {
+        isDashing = true;
+        dashTimeLeft = dashTime;
+        lastDash = Time.time;
+
+        PlayerAfterImagePool.Instance.GetFromPool();
+        lastImageXpos = transform.position.x;
+    }
+    private void CheckDash()
+    {
+        if (isDashing)
+        {
+            if (dashTimeLeft > 0)
+            {
+                canMove = false;
+                canFlip = false;
+                rb.velocity = new Vector2(dashSpeed * facingDirection, rb.velocity.y);
+                dashTimeLeft -= Time.deltaTime;
+                if (Mathf.Abs(transform.position.x - lastImageXpos) > distanceBetweenImages)
+                {
+                    PlayerAfterImagePool.Instance.GetFromPool();
+                    lastImageXpos = transform.position.x;
+                }
+            }
+            if (dashTimeLeft <= 0 || isTouchingWall)
+            {
+                isDashing = false;
+                canMove = true;
+                canFlip = true;
+            }
         }
     }
     private void ApplyMovement()
@@ -340,6 +387,14 @@ public class Bandit : MonoBehaviour
             lastWallJumpDirection = -facingDirection;
         }
     }
+    public void DisableFlip()
+    {
+        canFlip = false;
+    }
+    public void EnableFlip()
+    {
+        canFlip = true;
+    }
     private void Flip()
     {
         if (!isWallSliding && canFlip)
@@ -349,50 +404,6 @@ public class Bandit : MonoBehaviour
             transform.Rotate(0.0f, 180.0f, 0.0f);
         }
 
-    }
-    void Attack()
-    {
-        if (Time.time >= nextAttackTime)
-        {
-            anim.SetTrigger("Attack");
-            nextAttackTime = Time.time + 1f / attackRate;
-            Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
-
-
-            foreach (Collider2D enemy in hitEnemies)
-            {
-                //Debug.Log("Hit:" + enemy.name);
-                enemy.GetComponent<Enemy_behaviour>().TakeDamage(attackDamage);
-            }
-        }
-
-    }
-    public void PlayerTakeDamage(int damage)
-    {
-        //Player get damage
-        currentHealth -= damage;
-
-        healthBar.SetHealth(currentHealth);
-        anim.SetTrigger("Hurt");
-
-        if (currentHealth <= 0)
-        {
-            PlayerDie();
-        }
-    }
-    void PlayerDie()
-    {
-        //Player die
-        m_isDead = true;
-        anim.SetTrigger("Death");
-
-        /*rb.bodyType = RigidbodyType2D.Kinematic;
-
-        GetComponent<Collider2D>().enabled = false;
-
-        Destroy(gameObject, 2f);
-
-        this.enabled = false;*/
     }
     private void OnLevelWasLoaded(int level)
     {
@@ -412,14 +423,6 @@ public class Bandit : MonoBehaviour
     void CreatDust()
     {
         dust.Play();
-    }
-    void OnDrawGizmosSelected()
-    {
-        if (attackPoint == null)
-        {
-            return;
-        }
-        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
     }
     private void OnDrawGizmos()
     {

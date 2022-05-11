@@ -7,15 +7,19 @@ TagManager:
   - StartPos
   - Backpack
   - Key
+  - Enemy
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Enemies
+  - 
   - Water
   - UI
-  - Player
+  - 
   - Ground
+  - Damagable
+  - Dead
+  - Player
   - 
   - 
   - 
@@ -28,9 +32,6 @@ TagManager:
   - 
   - 
   - 
-  - Layer 1
-  - Layer 2
-  - Layer 3
   - 
   - 
   - 
@@ -47,9 +48,18 @@ TagManager:
   - name: BackGround
     uniqueID: 4250941897
     locked: 0
+  - name: Decoration
+    uniqueID: 1621692519
+    locked: 0
   - name: Platform
     uniqueID: 4189426099
     locked: 0
+  - name: Enemy
+    uniqueID: 3883270809
+    locked: 0
   - name: Player
     uniqueID: 2425651459
+    locked: 0
+  - name: ForeGround Decoration
+    uniqueID: 2302553255
     locked: 0
