@@ -17,11 +17,14 @@ public class PlayerCombatController : MonoBehaviour
     private float lastInputTime = Mathf.NegativeInfinity;
     private float[] attackDetails = new float[2];
     private Animator anim;
-
+    private Bandit player;
+    private PlayerStats Ps;
     private void Start()
     {
         anim = GetComponent<Animator>();
         anim.SetBool("canAttack", combatEnabled);
+        player = GetComponent<Bandit>();
+        Ps = GetComponent<PlayerStats>();
     }
     private void Update()
     {
@@ -75,6 +78,24 @@ public class PlayerCombatController : MonoBehaviour
         isAttacking = false;
         anim.SetBool("isAttacking", isAttacking);
         anim.SetBool("attack1", false);
+    }
+    private void Damage(float[] attackDetails)
+    {
+        if (!player.GetDashStatus())
+        {
+            int direction;
+            Ps.DecreaseHealth(attackDetails[0]);
+
+            if (attackDetails[1] < transform.position.x)
+            {
+                direction = 1;
+            }
+            else
+            {
+                direction = -1;
+            }
+            player.Knockback(direction);
+        }
     }
     private void OnDrawGizmos()
     {

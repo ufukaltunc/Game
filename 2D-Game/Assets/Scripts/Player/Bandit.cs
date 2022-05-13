@@ -6,38 +6,47 @@ public class Bandit : MonoBehaviour
     #region Private Variables
     private Animator anim;
     private Rigidbody2D rb;
-    private Vector2 ledgePosBot;
-    private Vector2 ledgePos1;
-    private Vector2 ledgePos2;
+    [SerializeField]
+    private Vector2 knockbackSpeed;
+    private Vector2
+        ledgePosBot,
+        ledgePos1,
+        ledgePos2;
     private static Bandit instance;
-    private float movementInputDirection;
-    private float jumpTimer;
-    private float turnTimer;
-    private float wallJumpTimer;
-    private float dashTimeLeft;
-    private float lastImageXpos;
-    private float lastDash = -100f;
-    private bool isWalking;
-    private bool isFacingRight = true;
-    private bool isGrounded;
-    private bool isTouchingWall;
-    private bool canNormalJump;
-    private bool canWallJump;
-    private bool isWallSliding;
-    private bool isAttemtingtoJump;
-    private bool checkJumpMultiplier;
-    private bool canMove;
-    private bool canFlip;
-    private bool hasWallJumped;
-    private bool isTounchingLedge;
-    private bool canClimbLedge = false;
-    private bool ledgeDetected;
-    private bool isDashing = false;
-    private int amountOfJumpsLeft;
-    private int facingDirection = 1;
-    private int lastWallJumpDirection;
-    //private Sensor_Bandit m_groundSensor;
-    //private bool m_combatIdle = false;
+    [SerializeField]
+    private float knockbackDuration;
+    private float
+        movementInputDirection,
+        jumpTimer,
+        turnTimer,
+        wallJumpTimer,
+        dashTimeLeft,
+        lastImageXpos,
+        lastDash = -100f,
+        knockbackStartTime;
+    private bool
+        isWalking,
+        isFacingRight = true,
+        isGrounded,
+        isTouchingWall,
+        canNormalJump,
+        canWallJump,
+        isWallSliding,
+        isAttemtingtoJump,
+        checkJumpMultiplier,
+        canMove,
+        canFlip,
+        hasWallJumped,
+        isTounchingLedge,
+        canClimbLedge = false,
+        ledgeDetected,
+        isDashing,
+        knockback;
+
+    private int
+        amountOfJumpsLeft,
+        facingDirection = 1,
+        lastWallJumpDirection;
     #endregion
 
 
@@ -110,6 +119,7 @@ public class Bandit : MonoBehaviour
         CheckJump();
         CheckLedgeClimb();
         CheckDash();
+        CheckKnockback();
     }
     private void FixedUpdate()
     {
@@ -119,6 +129,24 @@ public class Bandit : MonoBehaviour
     public int GetFacingDirection()
     {
         return facingDirection;
+    }
+    public bool GetDashStatus()
+    {
+        return isDashing;
+    }
+    public void Knockback(int direction)
+    {
+        knockback = true;
+        knockbackStartTime = Time.time;
+        rb.velocity = new Vector2(knockbackSpeed.x * direction, knockbackSpeed.y);
+    }
+    private void CheckKnockback()
+    {
+        if (Time.time >= knockbackStartTime + knockbackDuration && knockback)
+        {
+            knockback = false;
+            rb.velocity = new Vector2(0.0f, rb.velocity.y);
+        }
     }
     private void CheckIfWallSliding()
     {
@@ -305,11 +333,11 @@ public class Bandit : MonoBehaviour
     }
     private void ApplyMovement()
     {
-        if (!isGrounded && !isWallSliding && movementInputDirection == 0)
+        if (!isGrounded && !isWallSliding && movementInputDirection == 0 && !knockback)
         {
             rb.velocity = new Vector2(rb.velocity.x * airDragMultiplier, rb.velocity.y);
         }
-        else if (canMove)
+        else if (canMove && !knockback)
         {
             rb.velocity = new Vector2(movementSpeed * movementInputDirection, rb.velocity.y);
         }
@@ -397,7 +425,7 @@ public class Bandit : MonoBehaviour
     }
     private void Flip()
     {
-        if (!isWallSliding && canFlip)
+        if (!isWallSliding && canFlip && !knockback)
         {
             facingDirection *= -1;
             isFacingRight = !isFacingRight;
