@@ -161,7 +161,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1869315837
-  m_SortingLayer: 5
+  m_SortingLayer: 7
   m_SortingOrder: 0
   m_Sprite: {fileID: 1943664941, guid: 256f7b0de53610a4ab155e6f184fb579, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -189,7 +189,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 5
+  m_GravityScale: 8
   m_Material: {fileID: 6200000, guid: 792cfb6b96293ee49a80b90f13da3ed5, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -219,14 +219,14 @@ MonoBehaviour:
   ledgeCheck: {fileID: 7791742257034060403}
   wallHopDirection: {x: 1, y: 0.5}
   wallJumpDirection: {x: 1, y: 2}
-  movementSpeed: 8
-  jumpForce: 16
+  movementSpeed: 9
+  jumpForce: 20
   groundCheckRadius: 0.3
   variableJumpHeightMultiplier: 0.5
   wallCheckDistance: 0.65
   wallSlideSpeed: 1
   airDragMultiplier: 0.95
-  wallJumpForce: 20
+  wallJumpForce: 27
   jumpTimerSet: 0.15
   turnTimerSet: 0.1
   wallJumpTimerSet: 0.5
@@ -5119,7 +5119,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1869315837
-  m_SortingLayer: 5
+  m_SortingLayer: 7
   m_SortingOrder: -5
   m_RenderMode: 0
   m_MeshDistribution: 0
