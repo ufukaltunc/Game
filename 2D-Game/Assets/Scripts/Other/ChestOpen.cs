@@ -4,27 +4,21 @@ using UnityEngine;
 
 public class ChestOpen : MonoBehaviour
 {
+    [SerializeField]
+    private GameObject codelock;
     public Animator animator;
-    // Start is called before the first frame update
-    void Start()
-    {
 
-    }
-
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
-
-    }
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        animator.SetBool("In", true);
-        animator.SetBool("Out", false);
     }
     private void OnTriggerStay2D(Collider2D other)
     {
-        animator.SetBool("In", true);
-        animator.SetBool("Out", false);
+        if (Input.GetButton("Use"))
+        {
+            codelock.SetActive(true);
+            animator.SetBool("In", true);
+            animator.SetBool("Out", false);
+        }
     }
     private void OnTriggerExit2D(Collider2D other)
     {

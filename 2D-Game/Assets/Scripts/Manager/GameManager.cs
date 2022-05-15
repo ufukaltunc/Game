@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     private float respawnTimeStart;
     private bool respawn;
     private CinemachineVirtualCamera CVC;
+    
     private void Start()
     {
         CVC = GameObject.Find("Player Camera").GetComponent<CinemachineVirtualCamera>();

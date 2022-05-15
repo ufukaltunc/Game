@@ -185,7 +185,7 @@ TextureImporter:
       name: Skeleton Attack_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 3
         y: 0
         width: 40
         height: 37
@@ -206,7 +206,7 @@ TextureImporter:
       name: Skeleton Attack_1
       rect:
         serializedVersion: 2
-        x: 40
+        x: 46
         y: 0
         width: 40
         height: 37
@@ -227,7 +227,7 @@ TextureImporter:
       name: Skeleton Attack_2
       rect:
         serializedVersion: 2
-        x: 82
+        x: 89
         y: 0
         width: 40
         height: 37
@@ -248,9 +248,9 @@ TextureImporter:
       name: Skeleton Attack_3
       rect:
         serializedVersion: 2
-        x: 122
+        x: 133
         y: 0
-        width: 40
+        width: 38
         height: 37
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -269,9 +269,9 @@ TextureImporter:
       name: Skeleton Attack_4
       rect:
         serializedVersion: 2
-        x: 162
+        x: 176
         y: 0
-        width: 40
+        width: 36
         height: 37
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -290,9 +290,9 @@ TextureImporter:
       name: Skeleton Attack_5
       rect:
         serializedVersion: 2
-        x: 206
+        x: 216
         y: 0
-        width: 40
+        width: 42
         height: 37
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -311,9 +311,9 @@ TextureImporter:
       name: Skeleton Attack_6
       rect:
         serializedVersion: 2
-        x: 251
+        x: 258
         y: 0
-        width: 40
+        width: 44
         height: 37
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -332,9 +332,9 @@ TextureImporter:
       name: Skeleton Attack_7
       rect:
         serializedVersion: 2
-        x: 304
+        x: 302
         y: 0
-        width: 40
+        width: 44
         height: 37
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -353,7 +353,7 @@ TextureImporter:
       name: Skeleton Attack_8
       rect:
         serializedVersion: 2
-        x: 351
+        x: 347
         y: 0
         width: 40
         height: 37
@@ -374,9 +374,9 @@ TextureImporter:
       name: Skeleton Attack_9
       rect:
         serializedVersion: 2
-        x: 395
+        x: 393
         y: 0
-        width: 40
+        width: 34
         height: 37
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -395,9 +395,9 @@ TextureImporter:
       name: Skeleton Attack_10
       rect:
         serializedVersion: 2
-        x: 438
+        x: 436
         y: 0
-        width: 40
+        width: 34
         height: 37
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -416,9 +416,9 @@ TextureImporter:
       name: Skeleton Attack_11
       rect:
         serializedVersion: 2
-        x: 482
+        x: 478
         y: 0
-        width: 40
+        width: 36
         height: 37
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -437,9 +437,9 @@ TextureImporter:
       name: Skeleton Attack_12
       rect:
         serializedVersion: 2
-        x: 525
+        x: 520
         y: 0
-        width: 40
+        width: 38
         height: 37
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -460,7 +460,7 @@ TextureImporter:
         serializedVersion: 2
         x: 566
         y: 0
-        width: 40
+        width: 32
         height: 37
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -481,7 +481,7 @@ TextureImporter:
         serializedVersion: 2
         x: 608
         y: 0
-        width: 40
+        width: 35
         height: 37
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
