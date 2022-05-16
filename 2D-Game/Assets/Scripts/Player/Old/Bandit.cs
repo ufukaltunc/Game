@@ -426,17 +426,17 @@ public class Bandit : MonoBehaviour
         }
 
     }
-    private void OnLevelWasLoaded(int level)
+    /*private void OnLevelWasLoaded(int level)
     {
         FindStartPos();
 
-        /*players = GameObject.FindGameObjectsWithTag("Player");
+        players = GameObject.FindGameObjectsWithTag("Player");
 
         if (players.Length > 1)
         {
             Destroy(players[1]);
-        }*/
-    }
+        }
+    }*/
     void FindStartPos()
     {
         transform.position = GameObject.FindWithTag("StartPos").transform.position;
