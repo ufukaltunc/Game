@@ -5,25 +5,28 @@ using UnityEngine;
 public class PlayerStats : MonoBehaviour
 {
     [SerializeField]
-    private float maxHealth;
+    private int maxHealth = 100;
     [SerializeField]
     private GameObject
         deathChunkParticle,
         deathBloodParticle;
-    private float currentHealth;
+    private int currentHealth;
     private GameManager GM;
+    public HealthBar healthBar;
 
     private void Start()
     {
         currentHealth = maxHealth;
+        healthBar.SetMaxHealth(maxHealth);
+        healthBar.SetHealth(currentHealth);
         GM = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
-    public void DecreaseHealth(float amount)
+    public void DecreaseHealth(int amount)
     {
         currentHealth -= amount;
-
-        if (currentHealth <= 0.0f)
+        healthBar.SetHealth(currentHealth);
+        if (currentHealth <= 0)
         {
             Die();
         }

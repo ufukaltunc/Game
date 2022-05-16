@@ -8,6 +8,7 @@ TagManager:
   - Backpack
   - Key
   - Enemy
+  - Heart
   layers:
   - Default
   - TransparentFX
@@ -59,6 +60,9 @@ TagManager:
     locked: 0
   - name: Hazard
     uniqueID: 426083741
+    locked: 0
+  - name: Heart
+    uniqueID: 1310366179
     locked: 0
   - name: Enemy
     uniqueID: 3883270809

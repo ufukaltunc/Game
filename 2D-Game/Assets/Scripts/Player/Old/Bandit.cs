@@ -52,7 +52,6 @@ public class Bandit : MonoBehaviour
 
     #region Public Variables
     public ParticleSystem dust;
-    public HealthBar healthBar;
     public LayerMask whatIsGround;
     public Transform groundCheck;
     public Transform wallCheck;
@@ -65,9 +64,7 @@ public class Bandit : MonoBehaviour
     public float variableJumpHeightMultiplier = 0.5f;
     public float wallCheckDistance;
     public float wallSlideSpeed;
-    //public float movementForceInAir;
     public float airDragMultiplier = 0.95f;
-    //public float wallHopForce;
     public float wallJumpForce;
     public float jumpTimerSet = 0.15f;
     public float turnTimerSet = 0.1f;
@@ -81,8 +78,6 @@ public class Bandit : MonoBehaviour
     public float distanceBetweenImages = 0.1f;
     public float dashCoolDown = 2.5f;
     public int amountOfJumps = 1;
-    public int maxHealth = 100;
-    int currentHealth;
     public static bool m_isDead = false;
     #endregion
 
@@ -99,8 +94,6 @@ public class Bandit : MonoBehaviour
             instance = this;
         }
         DontDestroyOnLoad(gameObject);*/
-        currentHealth = maxHealth;
-        healthBar.SetMaxHealth(maxHealth);
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         amountOfJumpsLeft = amountOfJumps;

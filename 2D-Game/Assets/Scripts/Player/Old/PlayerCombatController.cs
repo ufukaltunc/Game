@@ -84,7 +84,7 @@ public class PlayerCombatController : MonoBehaviour
         if (!player.GetDashStatus())
         {
             int direction;
-            Ps.DecreaseHealth(attackDetails.damageAmount);
+            Ps.DecreaseHealth((int)attackDetails.damageAmount);
 
             if (attackDetails.position.x < transform.position.x)
             {
