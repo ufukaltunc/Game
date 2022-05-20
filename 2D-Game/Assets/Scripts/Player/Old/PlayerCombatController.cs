@@ -15,6 +15,7 @@ public class PlayerCombatController : MonoBehaviour
 
     private bool gotInput, isAttacking, isFirstAttack;
     private float lastInputTime = Mathf.NegativeInfinity;
+    private GameManager GM;
     private AttackDetails attackDetails;
     private Animator anim;
     private Bandit player;
@@ -25,6 +26,7 @@ public class PlayerCombatController : MonoBehaviour
         anim.SetBool("canAttack", combatEnabled);
         player = GetComponent<Bandit>();
         Ps = GetComponent<PlayerStats>();
+        GM = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
     private void Update()
     {
@@ -33,7 +35,7 @@ public class PlayerCombatController : MonoBehaviour
     }
     private void CheckCombatInput()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetButtonDown("Fire1"))
         {
             if (combatEnabled)
             {
@@ -87,6 +89,31 @@ public class PlayerCombatController : MonoBehaviour
             Ps.DecreaseHealth((int)attackDetails.damageAmount);
 
             if (attackDetails.position.x < transform.position.x)
+            {
+                direction = 1;
+            }
+            else
+            {
+                direction = -1;
+            }
+            player.Knockback(direction);
+        }
+    }
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.tag == "Deadzone")
+        {
+            Ps.DecreaseHealth(Ps.currentHealth);
+            //GM.FallDown();
+        }
+    }
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        if (other.tag == "Hazards")
+        {
+            Ps.DecreaseHealth(4.0f);
+            int direction;
+            if (other.transform.position.x < transform.position.x)
             {
                 direction = 1;
             }

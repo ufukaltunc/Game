@@ -27,6 +27,7 @@ public class Entity : MonoBehaviour
     private float currentHealth;
     private float lastDamageTime;
     protected bool isDead;
+    protected bool isHurt;
 
     public virtual void Start()
     {
@@ -76,8 +77,7 @@ public class Entity : MonoBehaviour
     public virtual void Damage(AttackDetails attackDetails)
     {
         currentHealth -= attackDetails.damageAmount;
-
-
+        isHurt = true;
         DamageHop(entityData.damageHopSpeed);
         Instantiate(entityData.hitParticle, aliveGO.transform.position, Quaternion.Euler(0f, 0f, Random.Range(0f, 360f)));
         if (attackDetails.position.x > aliveGO.transform.position.x)
@@ -113,15 +113,6 @@ public class Entity : MonoBehaviour
     {
         return Physics2D.Raycast(playerCheck.position, aliveGO.transform.right, entityData.closeRangeActionDistance, entityData.whatIsPlayer);
     }
-
-
-
-    /*public virtual void ResetStunResistance()
-    {
-        isStunned = false;
-        currentStunResistance = entityData.stunResistance;
-    }*/
-
     public virtual void OnDrawGizmos()
     {
 

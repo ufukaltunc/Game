@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ce8fb478612bfe45951683513e79e2c, type: 3}
   m_Name: E3_BaseData
   m_EditorClassIdentifier: 
-  damageHopSpeed: 3
-  maxHealth: 30
+  damageHopSpeed: 10
+  maxHealth: 80
   wallCheckDistance: 0.5
   ledgeCheckDistance: 1
   groundCheckRadius: 0.3
-  minAgroDistance: 4
-  maxAgroDistance: 7
+  minAgroDistance: 7
+  maxAgroDistance: 12
   closeRangeActionDistance: 1.5
   hitParticle: {fileID: 8309519219911902883, guid: 439a0f0d325358e438164b80945ee221,
     type: 3}

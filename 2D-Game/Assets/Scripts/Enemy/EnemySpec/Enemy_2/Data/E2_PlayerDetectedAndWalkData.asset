@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04105f453e9e65a4281b6b33d9ebf7bb, type: 3}
   m_Name: E2_PlayerDetectedAndWalkData
   m_EditorClassIdentifier: 
-  movementSpeed: 6
+  movementSpeed: 12
   walktime: 2

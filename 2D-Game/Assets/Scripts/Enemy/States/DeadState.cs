@@ -18,9 +18,9 @@ public class DeadState : State
     public override void Enter()
     {
         base.Enter();
-
         GameObject.Instantiate(stateData.deadBloodParticle, entity.aliveGO.transform.position, stateData.deadBloodParticle.transform.rotation);
         GameObject.Instantiate(stateData.deadChunkParticle, entity.aliveGO.transform.position, stateData.deadChunkParticle.transform.rotation);
+        GameObject.Find("GameManager").GetComponent<GameManager>().CoinAddToScore(stateData.cash);
 
         entity.gameObject.SetActive(false);
     }

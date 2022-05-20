@@ -11,6 +11,7 @@ public class Enemy2 : Entity
     public E2_MeleeAttackState meleeAttackState { get; private set; }
     public E2_PlayerDetectedAndWalk playerDetectedAndWalk { get; private set; }
     public E2_DeadState deadState { get; private set; }
+    public E2_HurtState hurtState { get; private set; }
 
     [SerializeField]
     private D_IdleState idleStateData;
@@ -26,6 +27,9 @@ public class Enemy2 : Entity
     private D_PlayerDetectedAndWalk playerDetectedAndWalkData;
     [SerializeField]
     private D_DeadState deadStateData;
+    [SerializeField]
+    private D_HurtState hurtStateData;
+
 
     [SerializeField]
     private Transform meleeAttackPosition;
@@ -40,6 +44,7 @@ public class Enemy2 : Entity
         meleeAttackState = new E2_MeleeAttackState(this, stateMachine, "meleeAttack", meleeAttackPosition, meleeAttackStateData, this);
         playerDetectedAndWalk = new E2_PlayerDetectedAndWalk(this, stateMachine, "playerDetectedAndWalk", playerDetectedAndWalkData, this);
         deadState = new E2_DeadState(this, stateMachine, "dead", deadStateData, this);
+        hurtState = new E2_HurtState(this, stateMachine, "hurt", hurtStateData, this);
         stateMachine.Initialize(moveState);
     }
     public override void OnDrawGizmos()
@@ -51,8 +56,11 @@ public class Enemy2 : Entity
     public override void Damage(AttackDetails attackDetails)
     {
         base.Damage(attackDetails);
-
-        if (isDead)
+        if (isHurt)
+        {
+            stateMachine.ChangeState(hurtState);
+        }
+        else if (isDead)
         {
             stateMachine.ChangeState(deadState);
         }

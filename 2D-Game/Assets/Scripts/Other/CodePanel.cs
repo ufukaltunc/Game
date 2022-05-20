@@ -11,23 +11,27 @@ public class CodePanel : MonoBehaviour
     GameObject codelock;
     private bool correctCode = false;
     string code = "";
+    private void Start()
+    {
+        codelock.SetActive(false);
+        codeText.text = code;
+    }
     private void Update()
     {
-        codeText.text = code;
         if (code == "1234")
         {
             codeText.color = Color.green;
-            StartCoroutine(CheckCode(true));
+            //StartCoroutine(CheckCode(true));
             correctCode = true;
         }
         else if (code.Length == 4 && code != "1234")
         {
             codeText.color = Color.red;
-            StartCoroutine(CheckCode(false));
+            //StartCoroutine(CheckCode(false));
         }
     }
 
-    private IEnumerator CheckCode(bool check)
+    /*private IEnumerator CheckCode(bool check)
     {
         if (check)
         {
@@ -40,7 +44,7 @@ public class CodePanel : MonoBehaviour
             code = "";
         }
         codeText.color = Color.white;
-    }
+    }*/
     public bool GetLockStatus()
     {
         return correctCode;
@@ -49,5 +53,5 @@ public class CodePanel : MonoBehaviour
     {
         code += add;
     }
-    
+
 }

@@ -1,11 +1,15 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class Bandit : MonoBehaviour
 {
     #region Private Variables
+    private PlayerStats PS;
     private Animator anim;
     private Rigidbody2D rb;
+    [HideInInspector]
+    public float lastDash = -100f;
     [SerializeField]
     private Vector2 knockbackSpeed;
     private Vector2
@@ -22,7 +26,6 @@ public class Bandit : MonoBehaviour
         wallJumpTimer,
         dashTimeLeft,
         lastImageXpos,
-        lastDash = -100f,
         knockbackStartTime;
     private bool
         isWalking,
@@ -51,6 +54,8 @@ public class Bandit : MonoBehaviour
 
 
     #region Public Variables
+
+    public Slider slider;
     public ParticleSystem dust;
     public LayerMask whatIsGround;
     public Transform groundCheck;
@@ -94,6 +99,7 @@ public class Bandit : MonoBehaviour
             instance = this;
         }
         DontDestroyOnLoad(gameObject);*/
+        PS = GetComponent<PlayerStats>();
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         amountOfJumpsLeft = amountOfJumps;
@@ -288,6 +294,7 @@ public class Bandit : MonoBehaviour
             if (Time.time >= (lastDash + dashCoolDown))
             {
                 AttemToDash();
+
             }
         }
     }
@@ -304,6 +311,7 @@ public class Bandit : MonoBehaviour
     {
         if (isDashing)
         {
+            FindObjectOfType<DashSlider>().Dashing();
             if (dashTimeLeft > 0)
             {
                 canMove = false;
@@ -426,7 +434,8 @@ public class Bandit : MonoBehaviour
         }
 
     }
-    /*private void OnLevelWasLoaded(int level)
+    /*
+    private void OnLevelWasLoaded(int level)
     {
         FindStartPos();
 
