@@ -17,3 +17,4 @@ MonoBehaviour:
   deadBloodParticle: {fileID: 790645266067804834, guid: d4473b925c0595145813326303d15663,
     type: 3}
   cash: 100
+  heart: {fileID: 322712502084689216, guid: a2569eaf8026a0a4b9b01f61295dc809, type: 3}

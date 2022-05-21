@@ -28,11 +28,19 @@ public class PlayerStats : MonoBehaviour
             Die();
         }
     }
-    public void IncreaseHealth(float amount)
+    public void IncreaseHealth(GameObject heart)
     {
         if (currentHealth != maxHealth)
         {
-            currentHealth += amount;
+            if (currentHealth >= 90)
+            {
+                currentHealth = maxHealth;
+            }
+            else
+            {
+                currentHealth += 10.0f;
+            }
+            Destroy(heart);
             GM.Health(currentHealth);
         }
     }

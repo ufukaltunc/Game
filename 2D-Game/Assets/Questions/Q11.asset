@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Q11
   m_EditorClassIdentifier: 
   question: Click on the number 8
+  questionType: 1
   answers:
   - 6
   - 8

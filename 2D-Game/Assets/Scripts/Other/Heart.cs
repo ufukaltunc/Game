@@ -9,7 +9,7 @@ public class Heart : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            FindObjectOfType<GameManager>().GetHeart(gameObject);
+            FindObjectOfType<PlayerStats>().IncreaseHealth(gameObject);
         }
     }
 }

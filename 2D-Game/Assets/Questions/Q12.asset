@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Q12
   m_EditorClassIdentifier: 
   question: Click on the number 42
+  questionType: 1
   answers:
   - 74
   - 45

@@ -5,6 +5,7 @@ using System.Collections;
 public class Bandit : MonoBehaviour
 {
     #region Private Variables
+    private Quiz quiz;
     private PlayerStats PS;
     private Animator anim;
     private Rigidbody2D rb;
@@ -54,7 +55,6 @@ public class Bandit : MonoBehaviour
 
 
     #region Public Variables
-
     public Slider slider;
     public ParticleSystem dust;
     public LayerMask whatIsGround;
@@ -105,6 +105,7 @@ public class Bandit : MonoBehaviour
         amountOfJumpsLeft = amountOfJumps;
         wallHopDirection.Normalize();
         wallJumpDirection.Normalize();
+        quiz = FindObjectOfType<Quiz>();
         //m_groundSensor = transform.Find("GroundSensor").GetComponent<Sensor_Bandit>();
     }
     // Update is called once per frame
@@ -231,18 +232,29 @@ public class Bandit : MonoBehaviour
         {
             Flip();
         }
-
-        if (Mathf.Abs(rb.velocity.x) >= 0.01f)
+        if (!quiz.canPlayerMove)
         {
-            isWalking = true;
+            rb.velocity = new Vector2(0.0f, 0.0f);
         }
         else
         {
-            isWalking = false;
+            if (Mathf.Abs(rb.velocity.x) >= 0.01f)
+            {
+                isWalking = true;
+            }
+            else
+            {
+                isWalking = false;
+            }
         }
+
     }
     private void UpdateAnimations()
     {
+        if (!quiz.canPlayerMove)
+        {
+            isWalking = false;
+        }
         anim.SetBool("isWalking", isWalking);
         anim.SetBool("isGrounded", isGrounded);
         //Set AirSpeed in animator
@@ -251,50 +263,52 @@ public class Bandit : MonoBehaviour
     }
     private void CheckInput()
     {
-        movementInputDirection = Input.GetAxis("Horizontal");
+        if (quiz.canPlayerMove)
+        {
+            movementInputDirection = Input.GetAxis("Horizontal");
 
-        if (Input.GetButtonDown("Jump"))
-        {
-            if (isGrounded || (amountOfJumpsLeft > 0 && !isTouchingWall))
+            if (Input.GetButtonDown("Jump"))
             {
-                NormalJump();
+                if (isGrounded || (amountOfJumpsLeft > 0 && !isTouchingWall))
+                {
+                    NormalJump();
+                }
+                else
+                {
+                    jumpTimer = jumpTimerSet;
+                    isAttemtingtoJump = true;
+                }
             }
-            else
+            if (Input.GetButtonDown("Horizontal") && isTouchingWall)
             {
-                jumpTimer = jumpTimerSet;
-                isAttemtingtoJump = true;
-            }
-        }
-        if (Input.GetButtonDown("Horizontal") && isTouchingWall)
-        {
-            if (!isGrounded && movementInputDirection != facingDirection)
-            {
-                canMove = false;
-                canFlip = false;
+                if (!isGrounded && movementInputDirection != facingDirection)
+                {
+                    canMove = false;
+                    canFlip = false;
 
-                turnTimer = turnTimerSet;
+                    turnTimer = turnTimerSet;
+                }
             }
-        }
-        if (turnTimer >= 0)
-        {
-            turnTimer -= Time.deltaTime;
-            if (turnTimer <= 0)
+            if (turnTimer >= 0)
             {
-                canMove = true;
-                canFlip = true;
+                turnTimer -= Time.deltaTime;
+                if (turnTimer <= 0)
+                {
+                    canMove = true;
+                    canFlip = true;
+                }
             }
-        }
-        if (checkJumpMultiplier && !Input.GetButton("Jump"))
-        {
-            checkJumpMultiplier = false;
-            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * variableJumpHeightMultiplier);
-        }
-        if (Input.GetButtonDown("Dash"))
-        {
-            if (Time.time >= (lastDash + dashCoolDown))
+            if (checkJumpMultiplier && !Input.GetButton("Jump"))
             {
-                AttemToDash();
-
+                checkJumpMultiplier = false;
+                rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * variableJumpHeightMultiplier);
+            }
+            if (Input.GetButtonDown("Dash"))
+            {
+                if (Time.time >= (lastDash + dashCoolDown))
+                {
+                    AttemToDash();
+                }
             }
         }
     }
@@ -334,21 +348,25 @@ public class Bandit : MonoBehaviour
     }
     private void ApplyMovement()
     {
-        if (!isGrounded && !isWallSliding && movementInputDirection == 0 && !knockback)
+        if (quiz.canPlayerMove)
         {
-            rb.velocity = new Vector2(rb.velocity.x * airDragMultiplier, rb.velocity.y);
-        }
-        else if (canMove && !knockback)
-        {
-            rb.velocity = new Vector2(movementSpeed * movementInputDirection, rb.velocity.y);
-        }
-        if (isWallSliding)
-        {
-            if (rb.velocity.y < -wallSlideSpeed)
+            if (!isGrounded && !isWallSliding && movementInputDirection == 0 && !knockback)
             {
-                rb.velocity = new Vector2(rb.velocity.x, -wallSlideSpeed);
+                rb.velocity = new Vector2(rb.velocity.x * airDragMultiplier, rb.velocity.y);
+            }
+            else if (canMove && !knockback)
+            {
+                rb.velocity = new Vector2(movementSpeed * movementInputDirection, rb.velocity.y);
+            }
+            if (isWallSliding)
+            {
+                if (rb.velocity.y < -wallSlideSpeed)
+                {
+                    rb.velocity = new Vector2(rb.velocity.x, -wallSlideSpeed);
+                }
             }
         }
+
     }
     private void CheckJump()
     {

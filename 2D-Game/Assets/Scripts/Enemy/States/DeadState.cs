@@ -21,7 +21,7 @@ public class DeadState : State
         GameObject.Instantiate(stateData.deadBloodParticle, entity.aliveGO.transform.position, stateData.deadBloodParticle.transform.rotation);
         GameObject.Instantiate(stateData.deadChunkParticle, entity.aliveGO.transform.position, stateData.deadChunkParticle.transform.rotation);
         GameObject.Find("GameManager").GetComponent<GameManager>().CoinAddToScore(stateData.cash);
-
+        GameObject.Instantiate(stateData.heart, entity.aliveGO.transform.position, stateData.heart.transform.rotation);
         entity.gameObject.SetActive(false);
     }
 

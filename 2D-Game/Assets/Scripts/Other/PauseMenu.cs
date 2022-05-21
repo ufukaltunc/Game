@@ -8,6 +8,10 @@ public class PauseMenu : MonoBehaviour
     public static bool isPaused = false;
     public GameObject PauseMenuUI;
 
+    private bool isDashing = true;
+    private float dashTime = 0.1f, dashTimeLeft;
+    public GameObject player;
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -22,7 +26,32 @@ public class PauseMenu : MonoBehaviour
             }
         }
     }
+    /*private void AttemToDash()
+    {
+        isDashing = true;
+        dashTimeLeft = dashTime;
+        lastDash = Time.time;
 
+        PlayerAfterImagePool.Instance.GetFromPool();
+        lastImageXpos = transform.position.x;
+    }
+    private void CheckDash()
+    {
+        if (isDashing)
+        {
+            FindObjectOfType<DashSlider>().Dashing();
+            if (dashTimeLeft > 0)
+            {
+                rb.velocity = new Vector2(50, 0);
+                dashTimeLeft -= Time.deltaTime;
+                if (Mathf.Abs(transform.position.x - lastImageXpos) > distanceBetweenImages)
+                {
+                    PlayerAfterImagePool.Instance.GetFromPool();
+                    lastImageXpos = transform.position.x;
+                }
+            }
+        }
+    }*/
     public void Resume()
     {
         PauseMenuUI.SetActive(false);
@@ -34,6 +63,8 @@ public class PauseMenu : MonoBehaviour
         PauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
         isPaused = true;
+
+
     }
 
     public void LoadMenu()

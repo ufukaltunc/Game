@@ -17,19 +17,32 @@ public class Quiz : MonoBehaviour
 
     private Sprite _buttonImage;
     private GameManager GM;
-    private int correctans = 0;
+    private int wrongAns = 0;
+    [HideInInspector]
+    public bool colorblindIsActivated = false, canPlayerMove = true;
 
+    public int totalChest = 0;
     public bool isComplete;
-    public GameObject Panel;
+    public GameObject Panel, colorblindlessAsk, colorblindless;
     bool isActive = false;
     private void Start()
     {
         GM = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
-
+    private void CheckWrongAns()
+    {
+        if (wrongAns == 2)
+        {
+            colorblindlessAsk.SetActive(true);
+        }
+        else if (wrongAns == 3)
+        {
+            colorblindless.SetActive(true);
+        }
+    }
     public void PanelOpener()
     {
-
+        canPlayerMove = false;
         isActive = true;
         GetRandomQuestion();
         DisplayQuestion();
@@ -82,7 +95,6 @@ public class Quiz : MonoBehaviour
         correctAnswerIndex = currentQuestion.GetCorrectAnswerIndex();
         if (index == correctAnswerIndex)
         {
-            correctans += 1;
             GM.CoinAddToScore(1000);
             questionText.text = "Correct!";
             Invoke("ClosePanel", 2);
@@ -90,10 +102,24 @@ public class Quiz : MonoBehaviour
 
         else
         {
-            string correctAnswer = currentQuestion.GetAnswer(correctAnswerIndex);
-            questionText.text = "Sorry, the correct answer was;\n" + correctAnswer;
+            if (currentQuestion.GetQuestionType())
+            {
+                questionText.text = "Sorry, the correct answer was the " + (correctAnswerIndex + 1) + ".";
+            }
+            else
+            {
+                string correctAnswer = currentQuestion.GetAnswer(correctAnswerIndex);
+                questionText.text = "Sorry, the correct answer was;\n" + correctAnswer;
+            }
+            wrongAns += 1;
             Invoke("ClosePanel", 2);
+            if (!colorblindIsActivated)
+            {
+                CheckWrongAns();
+            }
         }
+        totalChest += 1;
+        canPlayerMove = true;
     }
 
     public void ClosePanel()

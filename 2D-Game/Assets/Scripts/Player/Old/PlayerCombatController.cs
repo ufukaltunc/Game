@@ -20,6 +20,7 @@ public class PlayerCombatController : MonoBehaviour
     private Animator anim;
     private Bandit player;
     private PlayerStats Ps;
+    private Quiz quiz;
     private void Start()
     {
         anim = GetComponent<Animator>();
@@ -27,6 +28,7 @@ public class PlayerCombatController : MonoBehaviour
         player = GetComponent<Bandit>();
         Ps = GetComponent<PlayerStats>();
         GM = GameObject.Find("GameManager").GetComponent<GameManager>();
+        quiz = FindObjectOfType<Quiz>();
     }
     private void Update()
     {
@@ -35,7 +37,7 @@ public class PlayerCombatController : MonoBehaviour
     }
     private void CheckCombatInput()
     {
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButtonDown("Fire1") && quiz.canPlayerMove)
         {
             if (combatEnabled)
             {
@@ -77,6 +79,7 @@ public class PlayerCombatController : MonoBehaviour
     }
     private void FinishAttack1()
     {
+
         isAttacking = false;
         anim.SetBool("isAttacking", isAttacking);
         anim.SetBool("attack1", false);
