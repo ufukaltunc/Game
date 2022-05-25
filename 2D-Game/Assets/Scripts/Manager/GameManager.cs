@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
 
     private PlayerStats Ps;
     private HealthBar healthBar;
+    [HideInInspector]
     public bool stopClock = false;
 
     private float respawnTimeStart, gameTime, time;

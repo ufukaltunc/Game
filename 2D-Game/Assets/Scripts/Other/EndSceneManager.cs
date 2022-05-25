@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class EndSceneManager : MonoBehaviour
 {
@@ -15,7 +15,15 @@ public class EndSceneManager : MonoBehaviour
         totalPoint = GameObject.Find("UICanvas/pointsForCoin").GetComponent<TextMeshProUGUI>();
         timerText.text = GM.timerText.text;
         totalPoint.text = GM.pointsForCoin.text;
+        Destroy(GM);
     }
-
+    public void Menu()
+    {
+        SceneManager.LoadScene("Menu");
+    }
+    public void Quit()
+    {
+        Application.Quit();
+    }
 
 }
